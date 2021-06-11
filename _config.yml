@@ -1,0 +1,68 @@
+---
+permalink: pretty
+title: Passional Christi vnnd Antichristi
+tagline: ", an annotated digital edition"
+description: An annotated digital edition created with <a href="http://readux.library.emory.edu/">Readux</a>
+url: 
+baseurl: ''
+gems:
+- jekyll-sitemap
+author:
+  name: An Author
+  url: 
+  email: 
+  twitter: 
+version: 0.7
+homepage_image: https://readux.ecds.emory.edu/books/readux:vks67/pages/readux:vks7c/single-page/
+show_annotation_author: true
+source_info:
+  title: Passional Christi vnnd Antichristi
+  author: Luther, Martin, 1483-1546.; Cranach, Lucas, 1472-1553.; Cranach, Hans, -1537.;
+    F. B., engraver.; Maler, Matthes, -1536, printer.
+  date: '1521'
+  url: https://readux.ecds.emory.edu/books/readux:vks67/
+  pdf_url: https://readux.ecds.emory.edu/books/readux:vks67/pdf/
+  via_readux: true
+publication_info:
+  title: Passional Christi vnnd Antichristi, an annotated digital edition
+  date: '2021'
+  author: Luther, Martin, 1483-1546.; Cranach, Lucas, 1472-1553.; Cranach, Hans, -1537.;
+    F. B., engraver.; Maler, Matthes, -1536, printer.
+  editors:
+  - Richard Adams
+  tei_xml: tei.xml
+image_size:
+  page:
+    width: 735
+    height: 1000
+  thumbnail:
+    width: 220
+    height: 300
+  small-thumbnail:
+    width: 73
+    height: 100
+collections:
+  annotations:
+    output: true
+    permalink: "/annotations/:path/"
+  volume_pages:
+    output: true
+    permalink: "/pages/:path/"
+defaults:
+- scope:
+    path: ''
+    type: volume_pages
+  values:
+    layout: volume_page
+    short_label: p.
+    deep_zoom: true
+    extra_js:
+    - volume-page.js
+    - hammer.min.js
+    - deepzoom.js
+    - openseadragon.min.js
+- scope:
+    path: ''
+    type: annotations
+  values:
+    layout: annotation

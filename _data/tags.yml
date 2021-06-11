@@ -1,0 +1,17 @@
+---
+manuscripttranslation:
+  name: ManuscriptTranslation
+lohrmann:
+  name: Lohrmann
+texttranslation:
+  name: TextTranslation
+texttranscription:
+  name: TextTranscription
+manuscripttranscription:
+  name: ManuscriptTranscription
+printtranslation:
+  name: PrintTranslation
+manuscripttrancription:
+  name: ManuscriptTrancription
+silver:
+  name: Silver
