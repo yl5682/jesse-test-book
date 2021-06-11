@@ -3,8 +3,8 @@ permalink: pretty
 title: Passional Christi vnnd Antichristi
 tagline: ", an annotated digital edition"
 description: An annotated digital edition created with <a href="http://readux.library.emory.edu/">Readux</a>
-url: 
-baseurl: ''
+url: https://yl5682.github.io/
+baseurl: '/jesse-test-book'
 gems:
 - jekyll-sitemap
 author:
