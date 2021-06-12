@@ -1,44 +1,6 @@
 ---
 layout: default
 ---
-<style>
-    .modal {
-        text-align: center;
-    }
-    
-    @media screen and (min-width: 768px) { 
-        .modal:before {
-            display: inline-block;
-            vertical-align: middle;
-            content: " ";
-            height: 100%;
-        }
-    }
-    
-    .modal-dialog {
-        display: inline-block;
-        text-align: left;
-        vertical-align: middle;
-    }
-    
-    .rx-tag-label {
-        font-weight: normal;
-    }
-    
-    .rx-tag-selector {
-        font-weight: bold;
-        cursor: pointer;
-    }
-    
-    .rx-tag-selector:hover {
-        text-decoration: none;
-    }
-
-    .rx-facet-stat {
-        display: none;
-    }
-</style>
-
 <!-- Reserved for JS -->
 {% assign tags = '' | split: ',' %}
 {% if page.annotation_count != 0 %}
@@ -55,7 +17,7 @@ layout: default
 {% endfor %}
 {% endif %}
 
-<!-- Modal -->
+<!-- Facet Modal -->
 <div class="modal fade" id="rx-facet-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -87,7 +49,8 @@ layout: default
         </div>
     </div>
 </div>
-    
+<!-- End of Facet Modal -->
+ 
     <article class="carousel page" id="app">
         <h1>{{ page.title }}</h1>
         <div class="carousel-inner">
@@ -261,55 +224,3 @@ annotation in margin -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 crossorigin="anonymous"></script>
-
-<script>
-    $("#rx-tag-select-all").on("click", function () {
-        var checkboxes = $(".rx-tag-checkbox");
-        checkboxes.prop('checked', $(this).not(':checked'));
-    });
-    $("#rx-tag-select-none").on("click", function () {
-        var checkboxes = $(".rx-tag-checkbox");
-        checkboxes.prop('checked', $(this).is(':checked'));
-    });
-    $("#rx-tag-update").on("click", function () {
-        var shownTags = [];
-        var hiddenTags = [];
-        var shownAnnotationCount = 0;
-        var hiddenAnnotationCount = 0;
-
-
-        $('.rx-tag-checkbox').filter("input:checked").each(function () {
-            shownTags.push($(this).attr('name'));
-        });
-
-        $('.rx-tag-checkbox').filter("input:not(:checked)").each(function () {
-            hiddenTags.push($(this).attr('name'));
-        });
-
-        $(".annotator-tag").each(function(){
-            if ($(this).length > 0) { // if there are tags on the page
-                var tag = $(this)[0].innerText; // get the tag name
-                if (shownTags.includes(tag)) { // show items if this tag is in the shown list
-                    var annotation = $(this).closest(".marginalia-item").attr("data-annotation-id");
-                    $(`[data-annotation-id=${annotation}]`).each(function(){
-                       $(this).show();
-                       shownAnnotationCount++;
-                    });
-                }
-
-                if (hiddenTags.includes(tag)) { // hide items if this tag is in the hidden list
-                    var annotation = $(this).closest(".marginalia-item").attr("data-annotation-id");
-                    $(`[data-annotation-id=${annotation}]`).each(function () {
-                        $(this).hide();
-                        hiddenAnnotationCount++;
-                    });
-                }
-            }
-        });
-
-        $("#rx-facet-shown-count").text(shownAnnotationCount/2);
-        $("#rx-facet-hidden-count").text(hiddenAnnotationCount/2);
-        $(".rx-facet-stat").show();
-        $("#rx-facet-modal").modal('hide');
-    });
-</script>

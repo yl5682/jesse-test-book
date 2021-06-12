@@ -353,4 +353,73 @@ $(document).ready(function () {
     });
     // Could use pinch gesture to trigger zoom mode, but it makes it
     // impossible to scroll the page on smaller screens.
+
+
+    // Facet module
+    $("#rx-tag-select-all").on("click", function () {
+      var checkboxes = $(".rx-tag-checkbox");
+      checkboxes.prop("checked", $(this).not(":checked"));
+    });
+    $("#rx-tag-select-none").on("click", function () {
+      var checkboxes = $(".rx-tag-checkbox");
+      checkboxes.prop("checked", $(this).is(":checked"));
+    });
+    $("#rx-tag-update").on("click", function () {
+      var shownTags = [];
+      var hiddenTags = [];
+      var shownAnnotationCount = 0;
+      var hiddenAnnotationCount = 0;
+
+      $(".rx-tag-checkbox")
+        .filter("input:checked")
+        .each(function () {
+          shownTags.push($(this).attr("name"));
+        });
+
+      $(".rx-tag-checkbox")
+        .filter("input:not(:checked)")
+        .each(function () {
+          hiddenTags.push($(this).attr("name"));
+        });
+
+      $(".annotator-tag").each(function () {
+        if ($(this).length > 0) {
+          // if there are tags on the page
+          var tag = $(this)[0].innerText; // get the tag name
+          if (shownTags.includes(tag)) {
+            // show items if this tag is in the shown list
+            var annotation = $(this)
+              .closest(".marginalia-item")
+              .attr("data-annotation-id");
+            $(`[data-annotation-id=${annotation}]`).each(function () {
+              $(this).show();
+              shownAnnotationCount++;
+            });
+          }
+
+          if (hiddenTags.includes(tag)) {
+            // hide items if this tag is in the hidden list
+            var annotation = $(this)
+              .closest(".marginalia-item")
+              .attr("data-annotation-id");
+            $(`[data-annotation-id=${annotation}]`).each(function () {
+              $(this).hide();
+              hiddenAnnotationCount++;
+            });
+          }
+        }
+      });
+
+      $("#rx-facet-shown-count").text(shownAnnotationCount / 2);
+      $("#rx-facet-hidden-count").text(hiddenAnnotationCount / 2);
+      if (hiddenAnnotationCount > 0) {
+        $(".rx-facet-stat").show();
+      } else {
+        $(".rx-facet-stat").hide();
+      }
+      $("#rx-facet-modal").modal("hide");
+    });
+
+    // End of facet module
+
 });
