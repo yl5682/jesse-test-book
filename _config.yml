@@ -61,7 +61,6 @@ defaults:
     - hammer.min.js
     - deepzoom.js
     - openseadragon.min.js
-    - vue.js
 - scope:
     path: ''
     type: annotations
