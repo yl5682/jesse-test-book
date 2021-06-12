@@ -1,0 +1,25 @@
+- name: Dr. Bobbi Dykema
+  title: Pastor
+  affiliation: First Church of the Brethren, Springfield, IL
+  image_url: /public/img/dykema.jpg
+
+- name: Dr. Edmund Wareham
+  title: Cowdrey Early Career Teaching and Research Fellow
+  affiliation: St Edmund Hall, University of Oxford
+  image_url: /public/img/Wareham.jpg
+
+- name: Dr. Larry Silver
+  title: James and Nan Wagner Farquhar Professor Emeritus of History of Part
+  affiliation: Penn State University
+  image_url: /public/img/Silver.Website.jpeg
+
+- name: Dr. Martin Lohrmann
+  title: Associate Professor of Lutheran Confessions and Heritage
+  affiliation: Wartburg Theological Seminary
+  image_url: /public/img/lohrmann.jpg
+
+- name: Dr. Ulrich Bubenheimer
+  title: Professor Emeritus
+  affiliation: Pädagogische Hochschule, Heidelberg
+  image_url: /public/img/bubenheimer.jpg
+

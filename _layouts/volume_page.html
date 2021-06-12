@@ -8,7 +8,7 @@ layout: default
 {% if annotation.annotated_page == page.tei_id %}
 {% if annotation.tags.size != 0 %}
 {% for tag in annotation.tags %}
-{% unless tags contains site.data.tags[tag].name %}}
+{% unless tags contains site.data.tags[tag].name %}
 {% assign tags = tags | push: site.data.tags[tag].name %}
 {% endunless %}
 {% endfor %}

@@ -3,6 +3,59 @@ layout: default
 title: Home
 nav_order: 1
 ---
+
+<style>
+  .rx-volume-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+  }
+
+  .mr {
+    margin-right: 1rem;
+  }
+
+  .mb {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  .rx-profile-picture {
+    width: 100% !important;
+    height: 150px !important;
+    object-fit: cover;
+    margin-bottom: 0.25rem;
+  }
+
+  .rx-sponsor-picture {
+    width: 100% !important;
+    height: 100%;
+    object-fit: cover;
+    margin-bottom: 0.25rem;
+  }
+
+   .rx-profile-name {
+     font-weight: bold;
+   }
+
+   .rx-profile-title {
+     font-size: 75%;
+   }
+
+   .rx-profile-affiliation {
+     font-size: 75%;
+   }
+   
+   .rx-volume-h2 {
+     font-weight: bold;
+     font-size: 1.25rem;
+     margin-top: 1.5rem; 
+     margin-bottom: 1rem; 
+   }
+
+</style>
 {% comment %}NOTE: could put type on the body element via yaml config, but
 could be misleading because this is also a website ... {% endcomment %}
 <div class="container" typeof="schema:Book">
@@ -16,31 +69,94 @@ could be misleading because this is also a website ... {% endcomment %}
       <meta property="schema:name" content="{{ editor }}" />
     </div>
   {% endfor %}
-  <img property="schema:image" src="{{ site.homepage_image }}"/>
+  <div class="row" style="margin-top: 2rem;">
+    <div class="col-sm-3 col-md-4 col-lg-4">
+        <img property="schema:image" src="{{site.baseurl}}/public/img/PassionalTP.jpeg" />
+    </div>
+    <div class="col-xs-9 col-md-8 col-lg-8">
 
-<p><span property="schema:numberOfPages">{{ site.volume_pages|size }}</span> pages,
-<span property="schema:commentCount">{{ site.annotations|size }}</span> annotations.</p>
+      <div class="rx-volume-title">Passional Christi vnnd Antichristi</div>
 
-<!-- source publication information -->
-{% if site.source_info %}
-<p class="text-muted">
-  <em>{{ site.source_info.title }}</em>.
-  {{ site.source_info.author}}, {{ site.source_info.date }}.
-</p>
-{% endif %}
+      <div class="mb"> a publication from <a href="http://pitts.emory.edu/kessler">Richard C. Kessler Reformation Collection </a></div>
+      <!-- source publication information -->
+      {% if site.source_info %}
+      <p class="text-muted mb">
+        <em>{{ site.source_info.title }}</em>.
+        {{ site.source_info.author}}, {{ site.source_info.date }}.
+      </p>
+      {% endif %}
 
-<!-- todo: use page objects for this instead of hard-coding urls -->
-<p><a href="{{ site.baseurl }}/introduction/">Read the introduction</a></p>
-<p><a href="{{ site.baseurl }}/pages/">Browse the pages</a></p>
+      <p>
+        <span property="schema:numberOfPages">{{ site.volume_pages|size }}</span> pages,
+        <span property="schema:commentCount">{{ site.annotations|size }}</span> annotations.
+      </p>
 
-{% comment %} link to source edition if urls are configured {% endcomment %}
-{% if site.source_info.url and site.source_info.pdf_url %}
- <p>View the <a property="schema:isBasedOnUrl" href="{{ site.source_info.url }}">source digital edition</a>
-    or download the <a href="{{ site.source_info.pdf_url }}">source PDF</a>{% if site.source_info.via_readux %} on <a href="http://readux.library.emory.edu/">Readux</a>{% endif %}.</p>
-{% endif %}
+      <!-- todo: use page objects for this instead of hard-coding urls -->
+      <a type="button" class="btn btn-default mr mb" href="{{ site.baseurl }}/introduction/">Read the introduction</a>
+      <a type="button" class="btn btn-primary mb" href="{{ site.baseurl }}/pages/">Browse the pages</a>
+      
+      
+      
+      {% comment %} link to source edition if urls are configured {% endcomment %}
+      {% if site.source_info.url and site.source_info.pdf_url %}
+      <p>View the <a property="schema:isBasedOnUrl" href="{{ site.source_info.url }}">source digital edition</a>
+        or download the <a href="{{ site.source_info.pdf_url }}">source PDF</a>{% if site.source_info.via_readux %} on <a
+          href="http://readux.library.emory.edu/">Readux</a>{% endif %}.</p>
+      {% endif %}
+      
+      {% if site.publication_info.tei_xml %}
+      <p>View annotated edition as <a href="{{ site.publication_info.tei_xml }}">TEI XML</a>.</p>
+      {% endif %}
+    </div>
+  </div>
 
-{% if site.publication_info.tei_xml %}
-<p>View annotated edition as <a href="{{ site.publication_info.tei_xml }}">TEI XML</a>.</p>
-{% endif %}
+  <div class="rx-volume-h2">Preface</div>
+  <p>
+    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
+    corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui
+    officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
+    distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime
+    placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut
+    officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.
+    Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut
+    perferendis doloribus asperiores repellat.
+  </p>
+
+
+  <div class="mb rx-volume-h2">Contributors</div>
+  <div class="row mb">
+    {% for profile in site.data.introduction %}
+    {% assign mod4 = forloop.index | modulo: 4 %}
+    <div class="col-md-3 col-xs-6 col-sm-4">
+      <img class="rx-profile-picture" src="{{site.baseurl}}/{{ profile.image_url }}" />
+      <div class="rx-profile-name">{{profile.name}}</div>
+      <div class="rx-profile-title">{{profile.title}}</div>
+      <div class="rx-profile-affiliation mb">{{profile.affiliation}}</div>
+    </div>
+    {% if mod4 == 0 %}
+    </div>
+    <div class="row mb">
+    {% endif %}
+      {% endfor %}
+  </div>
+
+
+
+  <div class="mb rx-volume-h2">Sponsors</div>
+  <div class="row mb text-center">
+    {% for sponsor in site.data.sponsors %}
+    {% assign mod4 = forloop.index | modulo: 3 %}
+    <div class="col-md-4 col-sm-4 col-xs-6">
+      <a href="{{sponsor.site_url}}">
+        <img class="rx-sponsor-picture" src="{{site.baseurl}}/{{ sponsor.img_url }}" />
+        <div class="rx-sponsor-name">{{sponsor.name}}</div>
+      </a>
+    </div>
+    {% if mod4 == 0 %}
+  </div>
+  <div class="row mb">
+    {% endif %}
+    {% endfor %}
+  </div>
 
 </div>
