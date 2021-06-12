@@ -1,8 +1,84 @@
 ---
 layout: default
 ---
-<article class="carousel page">
+<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/css/uikit.min.css" />
+<style>
+    .uk-checkbox, .uk-radio {
+        vertical-align: text-bottom;
+    }
+
+    .uk-checkbox {
+        margin: 0;
+    }
+
+    input[type=file]:focus, input[type=checkbox]:focus, input[type=radio]:focus {
+        outline: none;
+    }
+
+    .v-tag-label {
+        font-weight: normal;
+    }
+</style>
+<article class="carousel page" id="app">
     <h1>{{ page.title }}</h1>
+
+    <!-- Reserved for Vue -->
+    {% assign tags = '' | split: ',' %}
+    {% if page.annotation_count != 0 %}
+    {% for annotation in site.annotations %}
+    {% if annotation.annotated_page == page.tei_id %}
+    {% if annotation.tags.size != 0 %}
+        {% for tag in annotation.tags %}
+            {% assign tags = tags | push: site.data.tags[tag].name %}
+            {% assign tags = tags | push: "," %}
+        {% endfor %}
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <!-- <div>
+        <ul uk-accordion>
+            <li class="uk-open">
+                <a class="uk-accordion-title" href="#">Show Annotation Options</a>
+                <div class="uk-accordion-content">
+                    <v-annotation-facet tags="{{tags}}"></v-annotation-facet>
+                </div>
+            </li>
+        </ul>
+    </div> -->
+
+    <!-- This is the modal -->
+    <div id="my-id" class="uk-flex-top" uk-modal>
+        <button class="uk-modal-close" type="button"></button>
+        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+            <h3 class="uk-modal-title">Show me annotations by Tags</h3>
+            <v-annotation-facet tags="{{tags}}"></v-annotation-facet>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="carousel-inner">
 
         <div class="container in-page-controls">
@@ -20,6 +96,7 @@ layout: default
                     <a id="covers" href="#" class="btn active" alt="Single Page" title="Single Page"><span class="glyphicon glyphicon-file"></span></a>
 
                     <a id="list" alt="Browse pages" title="Browse pages" href="{{ site.baseurl }}/pages/" class="btn" rel="index"><span class="glyphicon glyphicon-th"></span></a>
+                    <a id="facet" uk-toggle="target: #my-id" alt="Facet" title="Facet" href="#" class="btn" rel="index"><span class="glyphicon glyphicon-filter"></span></a> 
                 </div>
 
                 {% if page.deep_zoom %}
@@ -131,6 +208,12 @@ otherwise find pages based on index to support Jekyll 2.4 on GitHub Pages.
   });
 </script>
 {% endif %}
+
+<script src="{{site.baseurl}}/public/js/vue-app.js"></script>
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/js/uikit-icons.min.js"></script>
+
 
 
 <!-- todo: readux basic layout, page image, deep zoom, next/prev,
