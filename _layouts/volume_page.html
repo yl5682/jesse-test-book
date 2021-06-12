@@ -1,220 +1,313 @@
 ---
 layout: default
 ---
-<!-- UIkit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/css/uikit.min.css" />
 <style>
-    .uk-checkbox, .uk-radio {
-        vertical-align: text-bottom;
+    .modal {
+        text-align: center;
     }
-
-    .uk-checkbox {
-        margin: 0;
+    
+    @media screen and (min-width: 768px) { 
+        .modal:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: " ";
+            height: 100%;
+        }
     }
-
-    input[type=file]:focus, input[type=checkbox]:focus, input[type=radio]:focus {
-        outline: none;
+    
+    .modal-dialog {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
     }
-
-    .v-tag-label {
+    
+    .rx-tag-label {
         font-weight: normal;
     }
+    
+    .rx-tag-selector {
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .rx-tag-selector:hover {
+        text-decoration: none;
+    }
+
+    .rx-facet-stat {
+        display: none;
+    }
 </style>
-<article class="carousel page" id="app">
-    <h1>{{ page.title }}</h1>
 
-    <!-- Reserved for Vue -->
-    {% assign tags = '' | split: ',' %}
-    {% if page.annotation_count != 0 %}
-    {% for annotation in site.annotations %}
-    {% if annotation.annotated_page == page.tei_id %}
-    {% if annotation.tags.size != 0 %}
-        {% for tag in annotation.tags %}
-            {% assign tags = tags | push: site.data.tags[tag].name %}
-            {% assign tags = tags | push: "," %}
-        {% endfor %}
-    {% endif %}
-    {% endif %}
-    {% endfor %}
-    {% endif %}
+<!-- Reserved for JS -->
+{% assign tags = '' | split: ',' %}
+{% if page.annotation_count != 0 %}
+{% for annotation in site.annotations %}
+{% if annotation.annotated_page == page.tei_id %}
+{% if annotation.tags.size != 0 %}
+{% for tag in annotation.tags %}
+{% assign tags = tags | push: site.data.tags[tag].name %}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
 
-    <!-- <div>
-        <ul uk-accordion>
-            <li class="uk-open">
-                <a class="uk-accordion-title" href="#">Show Annotation Options</a>
-                <div class="uk-accordion-content">
-                    <v-annotation-facet tags="{{tags}}"></v-annotation-facet>
-                </div>
-            </li>
-        </ul>
-    </div> -->
-
-    <!-- This is the modal -->
-    <div id="my-id" class="uk-flex-top" uk-modal>
-        <button class="uk-modal-close" type="button"></button>
-        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
-            <h3 class="uk-modal-title">Show me annotations by Tags</h3>
-            <v-annotation-facet tags="{{tags}}"></v-annotation-facet>
-        </div>
-    </div>
-
-    <div class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Modal body text goes here.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="rx-facet-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Show annotations by Tags</h4>
             </div>
-        </div>
-    </div>
-
-
-    <div class="carousel-inner">
-
-        <div class="container in-page-controls">
-            <div id="view-toggle" class="col-sm-4 pull-right">
-                <div class="btn-group pull-right">
-                {% comment %}annotation indicator/link for smaller screen layout {% endcomment %}
-                    {% if page.annotation_count != 0 %}
-                      <a class="comment-count pull-left" title="{{ page.annotation_count }} annotation{{ page.annotation_count|pluralize }}" href="#annotations">
-                        {{ page.annotation_count }}</a>
-                    {% endif %}
-                    {% if page.deep_zoom %}
-                    <a id="enable-zoom" href="#" class="btn" alt="Deep Zoom Mode" title="Deep Zoom Mode"><span class="glyphicon glyphicon-fullscreen"></span></a>
-                    {% endif %}
-
-                    <a id="covers" href="#" class="btn active" alt="Single Page" title="Single Page"><span class="glyphicon glyphicon-file"></span></a>
-
-                    <a id="list" alt="Browse pages" title="Browse pages" href="{{ site.baseurl }}/pages/" class="btn" rel="index"><span class="glyphicon glyphicon-th"></span></a>
-                    <a id="facet" uk-toggle="target: #my-id" alt="Facet" title="Facet" href="#" class="btn" rel="index"><span class="glyphicon glyphicon-filter"></span></a> 
-                </div>
-
-                {% if page.deep_zoom %}
-                <div id="deepzoom-controls" class="hidden">
-                    <div class="btn-group">
-                        <a id="dz-zoom-in" alt="Zoom In" title="Zoom In" href="#" class="btn"><span class="glyphicon glyphicon-plus"></span></a>
-
-                        <a id="dz-zoom-out" alt="Zoom Out" title="Zoom Out" href="#" class="btn"><span class="glyphicon glyphicon-minus"></span></a>
-
-                        <a id="dz-home" alt="Back to Start Position" title="Back to Start Position" href="#" class="btn"><span class="glyphicon glyphicon-home"></span></a>
-
-                        <a id="dz-fs" alt="Fullscreen Mode" title="Fullscreen Mode" href="#" class="btn"><span class="glyphicon glyphicon-fullscreen"></span></a>
+            <div class="modal-body">
+                <div style="margin-bottom: 15px;">You may choose to show or hide annotations based on associated Tags:</div>
+                
+                {% if tags.size > 0 %}
+                <div style="margin-bottom: 15px;">
+                    {% for tag in tags %}
+                    <div class="form-check form-switch">
+                        <input class="form-check-input rx-tag-checkbox" type="checkbox" id="{{tag}}" name="{{tag}}" checked>
+                        <label class="form-check-label rx-tag-label" for="{{tag}}">{{tag}}</label>
                     </div>
+                    {% endfor %}
                 </div>
+                
+                Select <a class="rx-tag-selector" id="rx-tag-select-all">All</a> | <a class="rx-tag-selector" id="rx-tag-select-none">None</a>
                 {% endif %}
             </div>
-
-            <div class="col-xs-3 col-sm-4 col-sm-offset-4 text-center">
-                <p class="text-muted">{{ page.short_label }} {{ page.number }}</p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="rx-tag-update">Update page</button>
             </div>
         </div>
     </div>
-
+</div>
+    
+    <article class="carousel page" id="app">
+        <h1>{{ page.title }}</h1>
+        <div class="carousel-inner">
+            <div class="container in-page-controls">
+                <div id="view-toggle" class="col-sm-4 pull-right">
+                    <div class="btn-group pull-right">
+                        {% comment %}annotation indicator/link for smaller screen layout {% endcomment %}
+                        {% if page.annotation_count != 0 %}
+                        <a class="comment-count pull-left" title="{{ page.annotation_count }} annotation{{ page.annotation_count|pluralize }}" href="#annotations">
+                            {{ page.annotation_count }}</a>
+                        {% endif %}
+                        {% if page.deep_zoom %}
+                        <a id="enable-zoom" href="#" class="btn" alt="Deep Zoom Mode" title="Deep Zoom Mode"><span class="glyphicon glyphicon-fullscreen"></span></a>
+                        {% endif %}
+                        
+                        <a id="covers" href="#" class="btn active" alt="Single Page" title="Single Page"><span class="glyphicon glyphicon-file"></span></a>
+                        
+                        <a id="list" alt="Browse pages" title="Browse pages" href="{{ site.baseurl }}/pages/" class="btn" rel="index"><span class="glyphicon glyphicon-th"></span></a>
+                        {% if tags.size > 0 %}
+                        <a id="facet" data-toggle="modal" data-target="#rx-facet-modal" alt="Facet" title="Facet" href="#" class="btn" rel="index"><span class="glyphicon glyphicon-filter"></span></a> 
+                        {% endif %}
+                    </div>
+                        
+                    {% if page.deep_zoom %}
+                    <div id="deepzoom-controls" class="hidden">
+                        <div class="btn-group">
+                            <a id="dz-zoom-in" alt="Zoom In" title="Zoom In" href="#" class="btn"><span class="glyphicon glyphicon-plus"></span></a>
+                            
+                            <a id="dz-zoom-out" alt="Zoom Out" title="Zoom Out" href="#" class="btn"><span class="glyphicon glyphicon-minus"></span></a>
+                            
+                            <a id="dz-home" alt="Back to Start Position" title="Back to Start Position" href="#" class="btn"><span class="glyphicon glyphicon-home"></span></a>
+                            
+                            <a id="dz-fs" alt="Fullscreen Mode" title="Fullscreen Mode" href="#" class="btn"><span class="glyphicon glyphicon-fullscreen"></span></a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                    
+                <div class="col-xs-3 col-sm-4 col-sm-offset-4 text-center">
+                    <p class="text-muted">{{ page.short_label }} {{ page.number }}</p>
+                </div>
+            </div>
+        </div>
+            
         <div class="text-center">
             <div id="zoom-page"></div>
             <div class="page">
                 <div class="content">
                     <section class="inner">
-                       <img class="page-image" src="{% if page.images.page contains '://' %}{% else %}{{ site.url }}{{ site.baseurl }}/{% endif %}{{ page.images.page }}"/>
-                      {{ content }}
+                        <img class="page-image" src="{% if page.images.page contains '://' %}{% else %}{{ site.url }}{{ site.baseurl }}/{% endif %}{{ page.images.page }}"/>
+                        {{ content }}
                     </section>
                 </div>
             </div>
         </div>
-<!--    </div> (extra? seems to affect marginalia display) -->
+        <!--    </div> (extra? seems to affect marginalia display) -->
+            
+        <aside class="margin-container">
+            <a name="annotations"></a>
+            <ul class="annotation-list">
 
-    <aside class="margin-container">
-    <a name="annotations"></a>
-        <ul class="annotation-list">
-        {% if page.annotation_count != 0 %}
-        {% for annotation in site.annotations %}
-            {% if annotation.annotated_page == page.tei_id %}
-                <li class="marginalia-item" data-annotation-id="{{ annotation.annotation_id }}">
-                    <a name="{{ annotation.annotation_id }}" title="view highlight"
-                        href="#hl-{{ annotation.annotation_id }}" class="to-hl"><span class="glyphicon glyphicon-chevron-up"></span></a>
-
-                    <a class="to-fullpage" href="{{ site.baseurl }}{{ annotation.url }}" title="full page annotation view"><i class="fa fa-expand"></i></a>
-
-                {% include annotation.html %}
+                <li class="alert alert-success marginalia-item" role="alert" style="padding: 15px;" >
+                    <div style="font-weight: bold; margin-bottom: 0.5rem;">Annotation summary</div>
+                    <table style="margin-bottom: 0.5rem;">
+                        <tr>
+                            <td>
+                                Total annotations on this page:
+                            </td>
+                            <td>
+                                <span class="badge">{{page.annotation_count}}</span>
+                            </td>
+                        </tr>
+                        <tr class="rx-facet-stat">
+                            <td>
+                                Shown annotations<sup>*</sup>:
+                            </td>
+                            <td>
+                                <span id="rx-facet-shown-count" class="badge"></span>
+                            </td>
+                        </tr>
+                        <tr class="rx-facet-stat">
+                            <td>
+                                Hidden annotations<sup>*</sup>:
+                            </td>
+                            <td>
+                                <span id="rx-facet-hidden-count" class="badge"></span>
+                            </td>
+                        </tr>
+                    </table>
+                    <p class="rx-facet-stat"><sup>*</sup>Based on your filter settings, some annotations may not be displayed.</p>
+                    
                 </li>
-            {% endif %}
-        {% endfor %}
-        {% else %}
-          <li class="empty-item"/>
+                {% if page.annotation_count != 0 %}
+                    {% for annotation in site.annotations %}
+                        {% if annotation.annotated_page == page.tei_id %}
+                            {% if annotation.tags.size != 0 %}
+                                {% for tag in annotation.tags %}
+                                    <li class="marginalia-item" data-annotation-id="{{ annotation.annotation_id }}" name="">
+                                        <a name="{{ annotation.annotation_id }}" title="view highlight" href="#hl-{{ annotation.annotation_id }}"
+                                        class="to-hl"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                        <a class="to-fullpage" href="{{ site.baseurl }}{{ annotation.url }}" title="full page annotation view"><i
+                                            class="fa fa-expand"></i></a>
+                                            {% include annotation.html %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <li class="empty-item"></li>
+                {% endif %}
+            </ul>
+        </aside>
+                
+        {% comment %} Find next/previous pages for navigation.
+        Use page.next and page.previous if available (jekyll 3.x),
+        otherwise find pages based on index to support Jekyll 2.4 on GitHub Pages.
+        {% endcomment %}
+        
+        {% comment %} Generate zero-based index from 1-based page sort order {% endcomment %}
+        {% assign index = page.sort_order|minus:1 %}
+        
+        {% if page.previous %}
+        {% assign prev_page = page.previous %}
+        {% elsif index > 0 %}
+        {% assign prev_index = index|minus:1 %}
+        {% assign prev_page = site.volume_pages[prev_index] %}
         {% endif %}
-
-        </ul>
-    </aside>
-
-{% comment %} Find next/previous pages for navigation.
-Use page.next and page.previous if available (jekyll 3.x),
-otherwise find pages based on index to support Jekyll 2.4 on GitHub Pages.
-{% endcomment %}
-
-    {% comment %} Generate zero-based index from 1-based page sort order {% endcomment %}
-    {% assign index = page.sort_order|minus:1 %}
-
-    {% if page.previous %}
-      {% assign prev_page = page.previous %}
-    {% elsif index > 0 %}
-      {% assign prev_index = index|minus:1 %}
-      {% assign prev_page = site.volume_pages[prev_index] %}
-    {% endif %}
-    {% if page.next %}
-      {% assign next_page = page.next %}
-    {% elsif index < site.volume_pages.last.sort_order|minus:1 %}
+        {% if page.next %}
+        {% assign next_page = page.next %}
+        {% elsif index < site.volume_pages.last.sort_order|minus:1 %}
         {% assign next_index = index|plus:1 %}
         {% assign next_page = site.volume_pages[next_index] %}
-    {% endif %}
-
-    {% if prev_page %}
-    <a class="left carousel-control" href="{{ site.baseurl }}{{ prev_page.url }}" role="button" data-slide="prev" title="Prev: {{ prev_page.title }}" rel="prev">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-    </a>
-    {% endif %}
-    {% if next_page %}
-    <a class="right carousel-control" href="{{ site.baseurl }}{{ next_page.url }}" role="button" data-slide="next" title="Next: {{ next_page.title }}" rel="next">
-        <span class="glyphicon glyphicon-chevron-right"></span>
-    </a>
-    {% endif %}
-</article>
-
+        {% endif %}
+        
+        {% if prev_page %}
+        <a class="left carousel-control" href="{{ site.baseurl }}{{ prev_page.url }}" role="button" data-slide="prev" title="Prev: {{ prev_page.title }}" rel="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        {% endif %}
+        {% if next_page %}
+        <a class="right carousel-control" href="{{ site.baseurl }}{{ next_page.url }}" role="button" data-slide="next" title="Next: {{ next_page.title }}" rel="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        {% endif %}
+    </article>
+    
 {% if page.deep_zoom %}
 <script type="text/javascript" charset="utf-8">
-   $(document).ready(function () {
-      // set up seadragon configuration (not loaded unless triggered by user)
-      set_seadragon_opts({
-          id: "zoom-page",
-          // prefixUrl: "",
-          tileSources: "{% if page.images.page contains '://' %}{% else %}{{ site.url }}{{ site.baseurl }}/{% endif %}{{ page.images.json }}",
-          toolbar: 'deepzoom-controls',
-          showNavigator: true,
-          navigatorPosition: 'TOP_LEFT',
-          zoomInButton: 'dz-zoom-in',
-          zoomOutButton: 'dz-zoom-out',
-          homeButton: 'dz-home',
-          fullPageButton: 'dz-fs'
-      });
-  });
+    $(document).ready(function () {
+        // set up seadragon configuration (not loaded unless triggered by user)
+        set_seadragon_opts({
+            id: "zoom-page",
+            // prefixUrl: "",
+            tileSources: "{% if page.images.page contains '://' %}{% else %}{{ site.url }}{{ site.baseurl }}/{% endif %}{{ page.images.json }}",
+            toolbar: 'deepzoom-controls',
+            showNavigator: true,
+            navigatorPosition: 'TOP_LEFT',
+            zoomInButton: 'dz-zoom-in',
+            zoomOutButton: 'dz-zoom-out',
+            homeButton: 'dz-home',
+            fullPageButton: 'dz-fs'
+        });
+    });
 </script>
 {% endif %}
-
-<script src="{{site.baseurl}}/public/js/vue-app.js"></script>
-<!-- UIkit JS -->
-<script src="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/js/uikit.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/uikit@3.6.22/dist/js/uikit-icons.min.js"></script>
-
-
-
+            
 <!-- todo: readux basic layout, page image, deep zoom, next/prev,
-    annotation in margin -->
+annotation in margin -->
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+crossorigin="anonymous"></script>
+
+<script>
+    $("#rx-tag-select-all").on("click", function () {
+        var checkboxes = $(".rx-tag-checkbox");
+        checkboxes.prop('checked', $(this).not(':checked'));
+    });
+    $("#rx-tag-select-none").on("click", function () {
+        var checkboxes = $(".rx-tag-checkbox");
+        checkboxes.prop('checked', $(this).is(':checked'));
+    });
+    $("#rx-tag-update").on("click", function () {
+        var shownTags = [];
+        var hiddenTags = [];
+        var shownAnnotationCount = 0;
+        var hiddenAnnotationCount = 0;
+
+
+        $('.rx-tag-checkbox').filter("input:checked").each(function () {
+            shownTags.push($(this).attr('name'));
+        });
+
+        $('.rx-tag-checkbox').filter("input:not(:checked)").each(function () {
+            hiddenTags.push($(this).attr('name'));
+        });
+
+        $(".annotator-tag").each(function(){
+            if ($(this).length > 0) { // if there are tags on the page
+                var tag = $(this)[0].innerText; // get the tag name
+                if (shownTags.includes(tag)) { // show items if this tag is in the shown list
+                    var annotation = $(this).closest(".marginalia-item").attr("data-annotation-id");
+                    $(`[data-annotation-id=${annotation}]`).each(function(){
+                       $(this).show();
+                       shownAnnotationCount++;
+                    });
+                }
+
+                if (hiddenTags.includes(tag)) { // hide items if this tag is in the hidden list
+                    var annotation = $(this).closest(".marginalia-item").attr("data-annotation-id");
+                    $(`[data-annotation-id=${annotation}]`).each(function () {
+                        $(this).hide();
+                        hiddenAnnotationCount++;
+                    });
+                }
+            }
+        });
+
+        $("#rx-facet-shown-count").text(shownAnnotationCount/2);
+        $("#rx-facet-hidden-count").text(hiddenAnnotationCount/2);
+        $(".rx-facet-stat").show();
+        $("#rx-facet-modal").modal('hide');
+    });
+</script>
