@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Introduction
-nav_order: 2
+title: Introduction 2
+nav_order: 3
 excerpt: An introduction explaining annotation methods and goals.
 ---
 
