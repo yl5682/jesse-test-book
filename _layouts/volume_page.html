@@ -1,7 +1,8 @@
 ---
 layout: default
 ---
-<!-- Reserved for JS -->
+<!-- Reserved for facet JS -->
+<!-- Get data into the tags -->
 {% assign tags = '' | split: ',' %}
 {% if page.annotation_count != 0 %}
 {% for annotation in site.annotations %}
@@ -34,7 +35,15 @@ layout: default
                     {% for tag in tags %}
                     <div class="form-check form-switch">
                         <input class="form-check-input rx-tag-checkbox" type="checkbox" id="{{tag}}" name="{{tag}}" checked>
-                        <label class="form-check-label rx-tag-label" for="{{tag}}">{{tag}}</label>
+                        <label class="form-check-label rx-tag-label" for="{{tag}}">
+                            {{tag | 
+                                replace: "Silver", "Commentary by Larry Silver" | 
+                                replace: "Lohrmann", "Commentary by Martin Lohrmann" |
+                                replace: "ManuscriptTranscription", "Transcription of Manuscript Marginalia by Ulrich Bubenheimer" |
+                                replace: "ManuscriptTranslation", "Translation of Manuscript Marginalia by Ulrich Bubenheimer" |
+                                replace: "PrintTranslation", "Translation of Printed Text by Edmund Wareham"
+                            }}
+                        </label>
                     </div>
                     {% endfor %}
                 </div>
