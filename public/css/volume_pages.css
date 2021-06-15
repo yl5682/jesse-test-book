@@ -116,6 +116,10 @@
   min-height: 100px;
 }
 
+.content {
+    margin-top: 1rem;
+}
+
 .ocr-line {
   display: block;
   position: absolute;
